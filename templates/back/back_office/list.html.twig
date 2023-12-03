@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello BackOfficeController!{% endblock %}
+
+{% block body %}
+    <h1>Liste des demandes</h1>
+    <div class="row gx-5">
+        {% for contactUser in contactUsers %}
+        <div class="card my-5">
+            <div class="card-header">
+                {{ contactUser.email }} - {{ contactUser.lastname |upper }} {{ contactUser.firstname | capitalize }}
+            </div>
+            <ul class="list-group list-group-flush">
+            {% for request in contactUser.contactRequests %}
+                    {% dump(request) %}
+                <li class="list-group-item">
+                    <form class="d-flex justify-content-start">
+                        <a class="btn {{ request.checked ? 'btn-success' : 'btn-outline-success' }} me-5" href="{{ path('app_back_check', {'id' : request.id}) }}">Ok</a>
+                        <div>{{ request.message }} - {{ request.createdAt | date('d/m/Y') }}</div>
+                    </form>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

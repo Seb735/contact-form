@@ -24,8 +24,9 @@
            value="{{ csrf_token('authenticate') }}"
     >
 
-    <button class="btn btn-lg btn-primary" type="submit">
+    <button class="btn btn-lg btn-primary mt-3" type="submit">
         Sign in
     </button>
 </form>
+<a class="fixed-bottom" href="{{ path('app_register') }}">S'enregistrer</a>
 {% endblock %}

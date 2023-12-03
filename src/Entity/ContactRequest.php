@@ -6,6 +6,7 @@ use App\Repository\ContactRequestRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContactRequestRepository::class)]
@@ -17,29 +18,23 @@ class ContactRequest
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    private string $lastname;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $firstname = null;
-
-    #[ORM\Column(length: 255)]
-    #[Assert\Email(
-        message: "Adresse mail invalide",
-    )]
-    private string $email;
+    #[ORM\ManyToOne(inversedBy: 'contactRequests')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['json_create'])]
+    private ?ContactUser $contactUser = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(
         message: 'Demande inexistante',
     )]
+    #[Groups(['json_create'])]
     private string $message;
 
     #[ORM\Column]
     private DateTimeImmutable $createdAt;
 
     #[ORM\Column(options: ["default" => false])]
+    #[Groups(['json_create'])]
     private ?bool $checked = false;
 
     public function getId(): int
@@ -47,38 +42,14 @@ class ContactRequest
         return $this->id;
     }
 
-    public function getLastname(): string
+    public function getContactUser(): ?ContactUser
     {
-        return $this->lastname;
+        return $this->contactUser;
     }
 
-    public function setLastname(string $lastname): static
+    public function setContactUser(?ContactUser $contactUser): static
     {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(?string $firstname): static
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
+        $this->contactUser = $contactUser;
 
         return $this;
     }
